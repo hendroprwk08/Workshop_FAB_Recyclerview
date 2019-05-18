@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getBaseContext(),
                                 "Data " + nama + " berhasil disimpan",
                                 Toast.LENGTH_SHORT).show();
+
+                        showRecyclerView();
                     }
                 });
 
