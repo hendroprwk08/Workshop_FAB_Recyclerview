@@ -57,6 +57,8 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CardViewHolder> {
         cardViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity.saveArrayList(context, siswas, "list_siswa");
+
                 //set bundle
                 Bundle b = new Bundle();
                 b.putString("b_nama", nama);
@@ -68,7 +70,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.CardViewHolder> {
 
                 //buka detail activity
                 ((Activity) context).startActivity(i);
-            }
+                }
         });
     }
 

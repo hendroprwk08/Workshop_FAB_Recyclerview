@@ -2,6 +2,7 @@ package com.example.workshop_fab_recyclerview;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity {
@@ -23,5 +24,21 @@ public class DetailActivity extends AppCompatActivity {
         //--- letakkan bundle disini
         tvNama.setText(b.getString("b_nama"));
         tvInstansi.setText(b.getString("b_instansi"));
+
+        getSupportActionBar().setTitle("Detail Activity");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    //alt + ins -> override methods
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

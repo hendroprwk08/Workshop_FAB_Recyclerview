@@ -1,7 +1,11 @@
 package com.example.workshop_fab_recyclerview;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +20,10 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -69,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                                 "Data " + nama + " berhasil disimpan",
                                 Toast.LENGTH_SHORT).show();
 
+                        saveArrayList(getApplicationContext(), siswas, "list_siswa");
                         showRecyclerView();
                     }
                 });
@@ -100,5 +109,57 @@ public class MainActivity extends AppCompatActivity {
 
         //set recyclerview dengan adapter
         rv.setAdapter(rvAdapter);
+    }
+
+    //-------------- URUSAN SHARED PREFERENCES
+    //alt + ins --> overide methods
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        //simpan share preferences
+        saveArrayList(getApplicationContext(), siswas, "list_siswa");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        //restore data ke array list
+        if(siswas.size() == 0){
+            siswas = getArrayList("list_siswa");
+        }
+
+        showRecyclerView();
+    }
+
+    //konversi array list ke string dan menyimpan pada Shared Preferneces
+    static void saveArrayList(Context context, ArrayList<Siswa> list, String key){
+        //definisi shared preferences
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        SharedPreferences.Editor ed = sp.edit();
+
+        //definisi GSON
+        Gson gson = new Gson();
+        String s = gson.toJson(list);//konversi list ke string
+
+        //simpan kedalam shared preferences
+        ed.putString(key, s);
+        ed.apply();
+    }
+
+    //mengembalikan nilai shared preferences dan meletakkan kembali pd ArrayList
+    ArrayList<Siswa> getArrayList(String key){
+        //definisi shared preferences
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(getApplicationContext());
+
+        //definisi GSON
+        Gson gson = new Gson();
+        String s = sp.getString(key, null);//konversi list ke string
+
+        //restore String ke tipe ArrayList
+        Type type = new TypeToken<ArrayList<Siswa>>(){}.getType();
+        return gson.fromJson(s, type);
     }
 }
